@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.basic.backend.domain.mapper.UserSessionMapper">
+
+    <insert id="insert">
+        INSERT INTO basic_user_session (
+            user_id,
+            session_key,
+            refresh_token,
+            ip_address,
+            user_agent,
+            login_at,
+            last_access_at,
+            status,
+            expires_at
+        )
+        VALUES (
+            #{userId},
+            #{sessionKey},
+            #{refreshToken},
+            #{ipAddress},
+            #{userAgent},
+            NOW(),
+            NOW(),
+            #{status},
+            #{expiresAt}
+        )
+    </insert>
+
+    <update id="updateLastAccessAt">
+        UPDATE basic_user_session
+           SET last_access_at = NOW()
+         WHERE session_key = #{sessionKey}
+           AND status = 'ACTIVE'
+    </update>
+
+    <update id="updateLogout">
+        UPDATE basic_user_session
+           SET status = 'LOGOUT',
+               logout_at = NOW()
+         WHERE session_key = #{sessionKey}
+    </update>
+
+    <select id="findActiveSessions" resultType="com.basic.backend.domain.entity.UserSessionEntity">
+        SELECT *
+          FROM basic_user_session
+         WHERE status = 'ACTIVE'
+         ORDER BY id DESC
+    </select>
+
+    <update id="updateLatestActiveLogoutByUserId">
+        UPDATE basic_user_session
+           SET status = 'LOGOUT',
+               logout_at = NOW()
+         WHERE id = (
+            SELECT id
+              FROM basic_user_session
+             WHERE user_id = #{userId}
+               AND status = 'ACTIVE'
+             ORDER BY id DESC
+             LIMIT 1
+        )
+    </update>
+
+    <select id="countActiveSessions" resultType="long">
+        SELECT COUNT(*)
+          FROM basic_user_session
+         WHERE status = 'ACTIVE'
+    </select>
+
+</mapper>

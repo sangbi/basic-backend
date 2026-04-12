@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.basic.backend.domain.mapper.RefreshTokenMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO refresh_tokens (
+            user_id,
+            refresh_token,
+            expires_at
+        )
+        VALUES (
+            #{userId},
+            #{refreshToken},
+            #{expiresAt}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE refresh_tokens
+           SET refresh_token = #{refreshToken},
+               expires_at = #{expiresAt}
+         WHERE user_id = #{userId}
+    </update>
+
+    <select id="findByRefreshToken" resultType="com.basic.backend.domain.entity.RefreshTokenEntity">
+        SELECT id,
+               user_id,
+               refresh_token,
+               expires_at
+          FROM refresh_tokens
+         WHERE refresh_token = #{refreshToken}
+    </select>
+
+    <select id="findByUserId" resultType="com.basic.backend.domain.entity.RefreshTokenEntity">
+        SELECT id,
+               user_id,
+               refresh_token,
+               expires_at
+          FROM refresh_tokens
+         WHERE user_id = #{userId}
+    </select>
+
+    <delete id="deleteByUserId">
+        DELETE FROM refresh_tokens WHERE user_id = #{userId}
+    </delete>
+
+</mapper>

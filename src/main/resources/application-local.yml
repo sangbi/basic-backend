@@ -1,0 +1,33 @@
+jwt:
+  secret: your-secret-key-your-secret-key-your-secret-key
+  access-token-validity: 3600000
+  refresh-token-validity: 1209600000
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/basic
+    username: codingsb
+    password: zhffpr1541!!@@
+    driver-class-name: org.postgresql.Driver
+
+  sql:
+    init:
+      mode: never
+
+logging:
+  level:
+    root: info
+    com.basic.backend: debug # 개발중에는 debug 모드로 적용은 하되 운영시에는 info 로 적용
+    org.springframework.security: info
+    org.mybatis: info
+
+app:
+  cors:
+    allowed-origins:
+      - http://localhost:3000
+      - http://localhost:3003
+
+swagger:
+  enabled: true
+
+

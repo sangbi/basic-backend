@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.basic.backend.domain.mapper.ActivityLogMapper">
+
+    <insert id="insert">
+        INSERT INTO basic_activity_logs (
+            user_id,
+            action_type,
+            http_method,
+            request_uri,
+            ip_address,
+            user_agent,
+            response_code,
+            request_body_summary
+        )
+        VALUES (
+            #{userId},
+            #{actionType},
+            #{httpMethod},
+            #{requestUri},
+            #{ipAddress},
+            #{userAgent},
+            #{responseCode},
+            #{requestBodySummary}
+        )
+    </insert>
+
+    <select id="findAll" resultType="com.basic.backend.domain.entity.ActivityLogEntity">
+        SELECT *
+          FROM basic_activity_logs
+         ORDER BY id DESC
+    </select>
+
+    <select id="countToday" resultType="long">
+        SELECT COUNT(*)
+          FROM basic_activity_logs
+         WHERE DATE(created_at) = CURRENT_DATE
+    </select>
+
+</mapper>

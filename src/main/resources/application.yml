@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: backend
+
+  profiles:
+    active: local
+
+  jackson:
+    time-zone: Asia/Seoul
+
+mybatis:
+  mapper-locations: classpath:/mapper/**/*.xml
+  type-aliases-package: com.basic.backend.domain
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    root: info
+    com.basic.backend: info
+
+app:
+  cors:
+    allowed-origins:
+      - http://localhost:3000
+      - http://localhost:3001
+      - http://localhost:3002
+      - http://localhost:3003
+      - https://whisking-craftsman-repressed.ngrok-free.dev
