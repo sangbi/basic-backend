@@ -7,42 +7,52 @@
 
     <select id="findByUserId" resultType="com.basic.backend.domain.entity.UserEntity">
         SELECT
-               id
-             , user_id
-             , password
-             , role
-             , created_at
-             , created_by
-             , updated_at
-             , updated_by
-          FROM basic_user
-         WHERE user_id = #{userId}
+               u.id
+             , u.user_id
+             , u.password
+             , u.created_at
+             , u.created_by
+             , u.updated_at
+             , u.updated_by
+             , u.user_nm
+             , u.email
+             , u.status
+             , u.last_login_at
+             , u.role_id
+             , r.role_code
+          FROM basic_user u
+          JOIN basic_role r ON u.role_id = r.id
+         WHERE u.user_id = #{userId}
     </select>
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO basic_user (
             user_id,
             password,
-            role,
             created_at,
             created_by,
             updated_at,
-            updated_by
+            updated_by,
+            user_nm,
+            email,
+            role_id
         )
         VALUES (
             #{userId},
             #{password},
-            #{role},
             NOW(),
             #{createdBy},
             NOW(),
-            #{updatedBy}
+            #{updatedBy},
+            #{userNm},
+            #{email},
+            #{roleId}
         )
     </insert>
 
     <update id="update">
         UPDATE basic_user
-           SET role = #{role},
+           SET role_id = #{roleId},
                updated_at = NOW(),
                updated_by = #{updatedBy}
          WHERE user_id = #{userId}
@@ -53,24 +63,26 @@
     </delete>
 
     <select id="findAllPaged" resultType="com.basic.backend.domain.entity.UserEntity">
-        SELECT id
-             , user_id
-             , role
-             , created_at
-             , created_by
-             , updated_at
-             , updated_by
-          FROM basic_user
+        SELECT u.id
+             , u.user_id
+             , u.created_at
+             , u.created_by
+             , u.updated_at
+             , u.updated_by
+             , u.user_nm
+             , u.email
+             , u.status
+             , u.last_login_at
+             , u.role_id
+             , r.role_code
+          FROM basic_user u
+          JOIN basic_role r ON u.role_id = r.id
         <where>
             <if test="userId != null and userId != ''">
-                AND user_id = #{userId}
-            </if>
-
-            <if test="role != null and role != ''">
-                AND role = #{role}
+                AND u.user_id = #{userId}
             </if>
         </where>
-         ORDER BY id
+         ORDER BY u.id
          LIMIT #{limit}
         OFFSET #{offset}
     </select>
@@ -81,10 +93,6 @@
         <where>
             <if test="userId != null and userId != ''">
                 AND user_id = #{userId}
-            </if>
-
-            <if test="role != null and role != ''">
-                AND role = #{role}
             </if>
         </where>
     </select>

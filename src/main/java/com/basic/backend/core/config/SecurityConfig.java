@@ -1,5 +1,7 @@
 package com.basic.backend.core.config;
 
+import com.basic.backend.core.security.authorization.MenuAuthorizationFilter;
+import com.basic.backend.core.security.authorization.MenuAuthorizationService;
 import com.basic.backend.core.security.handler.CustomAccessDeniedHandler;
 import com.basic.backend.core.security.handler.CustomAuthenticationEntryPoint;
 import com.basic.backend.core.security.jwt.JwtAuthenticationFilter;
@@ -35,17 +37,20 @@ public class SecurityConfig {
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final CorsProperties corsProperties;
+    private final MenuAuthorizationService menuAuthorizationService;
 
     public SecurityConfig(
             JwtTokenProvider jwtTokenProvider,
             CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
             CustomAccessDeniedHandler customAccessDeniedHandler,
-            CorsProperties corsProperties
+            CorsProperties corsProperties,
+            MenuAuthorizationService menuAuthorizationService
     ) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
         this.corsProperties = corsProperties;
+        this.menuAuthorizationService = menuAuthorizationService;
     }
 
     @Bean
@@ -74,6 +79,10 @@ public class SecurityConfig {
                 .addFilterBefore(
                         new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class
+                )
+                .addFilterAfter(
+                        new MenuAuthorizationFilter(menuAuthorizationService),
+                        JwtAuthenticationFilter.class
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable);

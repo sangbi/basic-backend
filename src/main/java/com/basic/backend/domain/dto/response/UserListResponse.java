@@ -8,5 +8,7 @@ import lombok.Getter;
 public class UserListResponse {
     private Long id;
     private String userId;
-    private String role;
+    private Long roleId;
+    private String roleCode;
+    private String status;
 }

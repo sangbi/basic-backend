@@ -5,14 +5,11 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class MenuResponse {
+public class AdminMenuResponse {
     private Long id;
     private String menuNm;
     private String menuPath;
-    private String apiPath;
     private Long parentId;
     private Integer sortOrder;
     private String icon;
-    private String visibleYn;
-    private String status;
 }

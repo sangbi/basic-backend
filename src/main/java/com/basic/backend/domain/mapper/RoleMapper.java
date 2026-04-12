@@ -8,4 +8,7 @@ import java.util.List;
 @Mapper
 public interface RoleMapper {
     List<RoleEntity> findAll();
+    RoleEntity findById(Long id);
+    void insert(RoleEntity entity);
+    void update(RoleEntity entity);
 }

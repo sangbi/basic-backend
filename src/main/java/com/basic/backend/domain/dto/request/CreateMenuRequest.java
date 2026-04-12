@@ -1,12 +1,11 @@
-package com.basic.backend.domain.dto.response;
+package com.basic.backend.domain.dto.request;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
-public class MenuResponse {
-    private Long id;
+@NoArgsConstructor
+public class CreateMenuRequest {
     private String menuNm;
     private String menuPath;
     private String apiPath;

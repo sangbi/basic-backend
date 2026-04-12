@@ -41,7 +41,9 @@ public class UserService {
                 .map(user -> UserListResponse.builder()
                         .id(user.getId())
                         .userId(user.getUserId())
-                        .role(user.getRole())
+                        .roleId(user.getRoleId())
+                        .roleCode(user.getRoleCode())
+                        .status(user.getStatus())
                         .build())
                 .toList();
 
@@ -56,7 +58,7 @@ public class UserService {
     public void update(UserUpdateCondition condition) {
         String currentUser = AuditUtil.getCurrentUser();
         UserUpdateRequest userUpdateRequest = UserUpdateRequest.builder()
-                .role(condition.getRole())
+                .roleId(condition.getRoleId())
                 .updatedBy(currentUser)
                 .userId(condition.getUserId())
                 .build();

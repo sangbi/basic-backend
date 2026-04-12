@@ -12,4 +12,73 @@
          ORDER BY sort_order ASC, id ASC
     </select>
 
+    <select id="findMenusByRoleCode" resultType="com.basic.backend.domain.entity.vo.AdminMenuFlatRow">
+        SELECT m.id,
+               m.menu_nm,
+               m.menu_path,
+               m.parent_id,
+               m.sort_order,
+               m.icon
+          FROM basic_menu m
+          JOIN basic_menu_role mr ON mr.menu_id = m.id
+          JOIN basic_role r ON r.id = mr.role_id
+         WHERE r.role_code = #{roleCode}
+           AND m.status = 'ACTIVE'
+           AND m.visible_yn = 'Y'
+           AND mr.can_read = 'Y'
+         ORDER BY m.sort_order ASC, m.id ASC
+    </select>
+
+    <select id="findById" resultType="com.basic.backend.domain.entity.MenuEntity">
+        SELECT *
+          FROM basic_menu
+         WHERE id = #{id}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO basic_menu (
+            menu_nm,
+            menu_path,
+            api_path,
+            parent_id,
+            sort_order,
+            icon,
+            visible_yn,
+            status,
+            created_at,
+            created_by,
+            updated_at,
+            updated_by
+        )
+        VALUES (
+            #{menuNm},
+            #{menuPath},
+            #{apiPath},
+            #{parentId},
+            #{sortOrder},
+            #{icon},
+            #{visibleYn},
+            #{status},
+            NOW(),
+            #{createdBy},
+            NOW(),
+            #{updatedBy}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE basic_menu
+           SET menu_nm = #{menuNm},
+               menu_path = #{menuPath},
+               api_path = #{apiPath},
+               parent_id = #{parentId},
+               sort_order = #{sortOrder},
+               icon = #{icon},
+               visible_yn = #{visibleYn},
+               status = #{status},
+               updated_at = NOW(),
+               updated_by = #{updatedBy}
+         WHERE id = #{id}
+    </update>
+
 </mapper>

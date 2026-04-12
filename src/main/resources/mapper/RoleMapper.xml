@@ -12,4 +12,43 @@
          ORDER BY id ASC
     </select>
 
+    <select id="findById" resultType="com.basic.backend.domain.entity.RoleEntity">
+        SELECT *
+          FROM basic_role
+         WHERE id = #{id}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO basic_role (
+            role_code,
+            role_nm,
+            description,
+            status,
+            created_at,
+            created_by,
+            updated_at,
+            updated_by
+        )
+        VALUES (
+            #{roleCode},
+            #{roleNm},
+            #{description},
+            #{status},
+            NOW(),
+            #{createdBy},
+            NOW(),
+            #{updatedBy}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE roles
+           SET role_nm = #{roleNm},
+               description = #{description},
+               status = #{status},
+               updated_at = NOW(),
+               updated_by = #{updatedBy}
+         WHERE id = #{id}
+    </update>
+
 </mapper>

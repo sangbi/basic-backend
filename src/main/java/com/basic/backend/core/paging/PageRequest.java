@@ -1,9 +1,9 @@
 package com.basic.backend.core.paging;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @NoArgsConstructor
 public class PageRequest<T> {
 

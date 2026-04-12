@@ -29,7 +29,10 @@ public class AuthUserReaderImpl implements AuthUserReader {
                 .id(userEntity.getId())
                 .userId(userEntity.getUserId())
                 .password(userEntity.getPassword())
-                .role(userEntity.getRole())
+                .roleId(userEntity.getRoleId())
+                .roleCode(userEntity.getRoleCode())
+                .userNm(userEntity.getUserNm())
+                .status(userEntity.getStatus())
                 .build();
     }
 
@@ -40,7 +43,7 @@ public class AuthUserReaderImpl implements AuthUserReader {
         UserEntity userEntity = UserEntity.builder()
                 .userId(authUser.getUserId())
                 .password(authUser.getPassword())
-                .role(authUser.getRole())
+                .roleId(authUser.getRoleId())
                 .createdBy(currentUser)
                 .updatedBy(currentUser)
                 .build();

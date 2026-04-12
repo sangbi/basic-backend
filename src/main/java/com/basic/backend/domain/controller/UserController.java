@@ -8,6 +8,7 @@ import com.basic.backend.core.response.ApiResponse;
 import com.basic.backend.core.util.RequestInfoUtil;
 import com.basic.backend.domain.dto.request.InfoUserCondition;
 import com.basic.backend.domain.dto.request.SearchUserCondition;
+import com.basic.backend.domain.dto.request.SearchUserPageRequest;
 import com.basic.backend.domain.dto.request.UserUpdateCondition;
 import com.basic.backend.domain.dto.response.UserListResponse;
 import com.basic.backend.domain.entity.UserEntity;
@@ -30,21 +31,19 @@ public class UserController {
         this.activityLogService = activityLogService;
     }
 
-    @PostMapping("/search")
+    @GetMapping("/search")
     public ApiResponse<PageResponse<UserListResponse>> search(
-            @RequestBody PageRequest<SearchUserCondition> request
+            @ModelAttribute SearchUserPageRequest request
     ) {
         return ApiResponse.result(userService.search(request));
     }
 
-    @PostMapping("/info")
-    public ApiResponse<UserEntity> info(
-            @RequestBody InfoUserCondition request
-            ) {
-        return ApiResponse.result(userService.info(request.getUserId()));
+    @GetMapping("/info/{userId}")
+    public ApiResponse<UserEntity> info(@PathVariable String userId) {
+        return ApiResponse.result(userService.info(userId));
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ApiResponse<String> update(@RequestBody @Valid UserUpdateCondition request, HttpServletRequest httpRequest) {
         userService.update(request);
 
@@ -56,14 +55,14 @@ public class UserController {
                 RequestInfoUtil.getClientIp(httpRequest),
                 RequestInfoUtil.getUserAgent(httpRequest),
                 "200",
-                "userId=" + request.getUserId()+",role="+request.getRole()
+                "userId=" + request.getUserId()+",roleId="+request.getRoleId()
         );
         return ApiResponse.result("회원수정 성공");
     }
 
-    @PostMapping("/delete")
-    public ApiResponse<String> delete(@RequestBody InfoUserCondition request,HttpServletRequest httpRequest) {
-        userService.delete(request.getUserId());
+    @DeleteMapping("/delete/{userId}")
+    public ApiResponse<String> delete(@PathVariable String userId,HttpServletRequest httpRequest) {
+        userService.delete(userId);
 
         activityLogService.save(
                 SecurityUtil.getCurrentUserId(),
@@ -73,7 +72,7 @@ public class UserController {
                 RequestInfoUtil.getClientIp(httpRequest),
                 RequestInfoUtil.getUserAgent(httpRequest),
                 "200",
-                "userId=" + request.getUserId()
+                "userId=" + userId
         );
         return ApiResponse.result("회원삭제 성공");
     }

@@ -1,6 +1,6 @@
 package com.basic.backend.domain.dto.request;
 
-import jakarta.annotation.Nullable;
+import com.basic.backend.core.paging.PageRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

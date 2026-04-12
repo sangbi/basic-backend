@@ -10,7 +10,9 @@ public class RegisterRequest {
 
     @NotBlank(message = "userId는 필수입니다.")
     private String userId;
-
     @NotBlank(message = "password는 필수입니다.")
     private String password;
+    private Long roleId;
+    private String userNm;
+    private String email;
 }

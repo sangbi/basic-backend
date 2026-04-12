@@ -16,9 +16,14 @@ public class UserEntity {
     private Long id;
     private String userId;
     private String password;
-    private String role;
     private LocalDateTime createdAt;
     private String createdBy;
     private LocalDateTime updatedAt;
     private String updatedBy;
+    private String userNm;
+    private String email;
+    private String status;
+    private LocalDateTime lastLoginAt;
+    private Long roleId;
+    private String roleCode;
 }

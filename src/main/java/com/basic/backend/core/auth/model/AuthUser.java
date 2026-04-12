@@ -9,5 +9,9 @@ public class AuthUser {
     private Long id;
     private String userId;
     private String password;
-    private String role;
+    private Long roleId;
+    private String roleCode;
+    private String userNm;
+    private String email;
+    private String status;
 }

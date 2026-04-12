@@ -38,4 +38,21 @@
          WHERE id = #{id}
     </update>
 
+    <select id="findPermissionYn" resultType="string">
+        SELECT
+            CASE
+                WHEN #{permissionType} = 'READ'   THEN mr.can_read
+                WHEN #{permissionType} = 'CREATE' THEN mr.can_create
+                WHEN #{permissionType} = 'UPDATE' THEN mr.can_update
+                WHEN #{permissionType} = 'DELETE' THEN mr.can_delete
+            END
+          FROM basic_menu_role mr
+          JOIN basic_role r ON mr.role_id = r.id
+          JOIN basic_menu m ON mr.menu_id = m.id
+         WHERE r.role_code = #{roleCode}
+           AND m.api_path = #{apiPath}
+           AND m.status = 'ACTIVE'
+         LIMIT 1
+    </select>
+
 </mapper>

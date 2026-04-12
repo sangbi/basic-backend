@@ -61,7 +61,9 @@ public class AuthService {
         AuthUser authUser = AuthUser.builder()
                 .userId(request.getUserId())
                 .password(encodedPassword)
-                .role("USER")
+                .roleId(request.getRoleId())
+                .userNm(request.getUserNm())
+                .email(request.getEmail())
                 .build();
 
         try {
@@ -77,7 +79,7 @@ public class AuthService {
         if (user == null) {
             throw new BasicException(ErrorCode.USER_NOT_FOUND);
         }
-        String accessToken = jwtTokenProvider.createAccessToken(user.getUserId(), user.getRole());
+        String accessToken = jwtTokenProvider.createAccessToken(user.getUserId(), user.getRoleCode());
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getUserId());
         String sessionKey = java.util.UUID.randomUUID().toString();
 
@@ -138,7 +140,7 @@ public class AuthService {
             throw new BasicException(ErrorCode.USER_NOT_FOUND); // 사용자가 존재하지 않습니다.
         }
 
-        String newAccessToken = jwtTokenProvider.createAccessToken(user.getUserId(), user.getRole());
+        String newAccessToken = jwtTokenProvider.createAccessToken(user.getUserId(), user.getRoleCode());
         String newRefreshToken = jwtTokenProvider.createRefreshToken(user.getUserId());
 
         RefreshToken updateRefreshToken = RefreshToken.builder()
