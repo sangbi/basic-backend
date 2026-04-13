@@ -3,7 +3,7 @@ package com.basic.backend.domain.service;
 import com.basic.backend.core.auth.util.SecurityUtil;
 import com.basic.backend.domain.dto.request.CreateMenuRequest;
 import com.basic.backend.domain.dto.request.UpdateMenuRequest;
-import com.basic.backend.domain.dto.response.AdminMenuResponse;
+import com.basic.backend.domain.dto.response.AdminMyMenuTreeResponse;
 import com.basic.backend.domain.dto.response.MenuResponse;
 import com.basic.backend.domain.entity.MenuEntity;
 import com.basic.backend.domain.entity.vo.AdminMenuFlatRow;
@@ -35,12 +35,6 @@ public class MenuService {
                         .visibleYn(menu.getVisibleYn())
                         .status(menu.getStatus())
                         .build())
-                .toList();
-    }
-
-    public List<AdminMenuResponse> findMenusByRoleCode(String roleCode) {
-        return menuMapper.findMenusByRoleCode(roleCode).stream()
-                .map(this::toAdminMyMenuResponse)
                 .toList();
     }
 
@@ -84,15 +78,56 @@ public class MenuService {
         menuMapper.update(entity);
     }
 
-    private AdminMenuResponse toAdminMyMenuResponse(AdminMenuFlatRow row) {
-        return AdminMenuResponse.builder()
-                .id(row.getId())
-                .menuNm(row.getMenuNm())
-                .menuPath(row.getMenuPath())
-                .parentId(row.getParentId())
-                .sortOrder(row.getSortOrder())
-                .icon(row.getIcon())
-                .build();
+    public List<AdminMyMenuTreeResponse> findMenuTreeByRoleCode(String roleCode) {
+        List<AdminMenuFlatRow> rows = menuMapper.findMenusByRoleCode(roleCode);
+
+        List<AdminMyMenuTreeResponse> allMenus = rows.stream()
+                .map(row -> AdminMyMenuTreeResponse.builder()
+                        .id(row.getId())
+                        .menuNm(row.getMenuNm())
+                        .menuPath(row.getMenuPath())
+                        .icon(row.getIcon())
+                        .parentId(row.getParentId())
+                        .sortOrder(row.getSortOrder())
+                        .children(new java.util.ArrayList<>())
+                        .build())
+                .toList();
+
+        java.util.Map<Long, AdminMyMenuTreeResponse> menuMap = allMenus.stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        AdminMyMenuTreeResponse::getId,
+                        menu -> menu
+                ));
+
+        java.util.List<AdminMyMenuTreeResponse> roots = new java.util.ArrayList<>();
+
+        for (AdminMyMenuTreeResponse menu : allMenus) {
+            if (menu.getParentId() == null) {
+                roots.add(menu);
+                continue;
+            }
+
+            AdminMyMenuTreeResponse parent = menuMap.get(menu.getParentId());
+            if (parent != null) {
+                parent.getChildren().add(menu);
+            } else {
+                roots.add(menu);
+            }
+        }
+
+        roots.sort(java.util.Comparator.comparing(AdminMyMenuTreeResponse::getSortOrder));
+        roots.forEach(this::sortChildrenRecursively);
+
+        return roots;
+    }
+
+    private void sortChildrenRecursively(AdminMyMenuTreeResponse menu) {
+        if (menu.getChildren() == null || menu.getChildren().isEmpty()) {
+            return;
+        }
+
+        menu.getChildren().sort(java.util.Comparator.comparing(AdminMyMenuTreeResponse::getSortOrder));
+        menu.getChildren().forEach(this::sortChildrenRecursively);
     }
 
     private MenuResponse toResponse(MenuEntity menu) {

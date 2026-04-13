@@ -14,6 +14,7 @@ import com.basic.backend.domain.dto.response.UserListResponse;
 import com.basic.backend.domain.entity.UserEntity;
 import com.basic.backend.domain.service.ActivityLogService;
 import com.basic.backend.domain.service.UserService;
+import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +34,16 @@ public class UserController {
 
     @GetMapping("/search")
     public ApiResponse<PageResponse<UserListResponse>> search(
-            @ModelAttribute SearchUserPageRequest request
+            @RequestParam Integer page,
+            @RequestParam Integer size,
+            @RequestParam(required = false) String userId
     ) {
+        PageRequest<SearchUserCondition> request = new PageRequest<SearchUserCondition>();
+        SearchUserCondition params = new SearchUserCondition();
+        params.setUserId(userId);
+        request.setCondition(params);
+        request.setPage(page);
+        request.setSize(size);
         return ApiResponse.result(userService.search(request));
     }
 

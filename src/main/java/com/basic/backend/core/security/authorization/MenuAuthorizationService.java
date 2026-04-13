@@ -22,9 +22,8 @@ public class MenuAuthorizationService {
         String normalizedApiPath = normalizeApiPath(requestUri);
 
         String permissionYn = menuRoleMapper.findPermissionYn(
-                roleCode,
-                normalizedApiPath,
-                permissionType
+                permissionType, roleCode,
+                normalizedApiPath
         );
 
         return "Y".equalsIgnoreCase(permissionYn);

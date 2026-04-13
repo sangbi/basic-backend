@@ -1,12 +1,12 @@
 package com.basic.backend.domain.dto.request;
 
-import com.basic.backend.core.paging.PageRequest;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class SearchUserCondition {
     private String userId;
-    private String role;
 }

@@ -27,11 +27,11 @@ public class UserService {
     }
 
     public PageResponse<UserListResponse> search(PageRequest<SearchUserCondition> request){
+        System.out.printf("아이디>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+request.getCondition().getUserId());
         SearchUserRequest mapperRequest = SearchUserRequest.builder()
                 .offset(request.getOffset())
                 .limit(request.getLimit())
                 .userId(request.getCondition().getUserId())
-                .role(request.getCondition().getRole())
                 .build();
 
         List<UserEntity> users = userMapper.findAllPaged(mapperRequest);
@@ -44,6 +44,9 @@ public class UserService {
                         .roleId(user.getRoleId())
                         .roleCode(user.getRoleCode())
                         .status(user.getStatus())
+                        .userNm(user.getUserNm())
+                        .email(user.getEmail())
+                        .lastLoginAt(user.getLastLoginAt())
                         .build())
                 .toList();
 
@@ -61,6 +64,7 @@ public class UserService {
                 .roleId(condition.getRoleId())
                 .updatedBy(currentUser)
                 .userId(condition.getUserId())
+                .userNm(condition.getUserNm())
                 .build();
 
         userMapper.update(userUpdateRequest);

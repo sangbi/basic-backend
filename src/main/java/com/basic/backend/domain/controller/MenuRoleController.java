@@ -5,6 +5,7 @@ import com.basic.backend.core.response.ApiResponse;
 import com.basic.backend.core.util.RequestInfoUtil;
 import com.basic.backend.domain.dto.request.UpdateMenuRoleRequest;
 import com.basic.backend.domain.dto.response.MenuRoleResponse;
+import com.basic.backend.domain.dto.response.MyMenuPermissionResponse;
 import com.basic.backend.domain.service.ActivityLogService;
 import com.basic.backend.domain.service.MenuRoleService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,5 +54,10 @@ public class MenuRoleController {
                         ", canDelete=" +request.getCanDelete()
         );
         return ApiResponse.result("메뉴 권한 수정 성공");
+    }
+
+    @GetMapping("/me")
+    public ApiResponse<List<MyMenuPermissionResponse>> findMyPermissions() {
+        return ApiResponse.result(menuRoleService.findMyPermissions());
     }
 }

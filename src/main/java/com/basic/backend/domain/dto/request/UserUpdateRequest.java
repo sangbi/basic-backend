@@ -8,5 +8,6 @@ import lombok.Data;
 public class UserUpdateRequest {
     private String updatedBy;
     private String userId;
+    private String userNm;
     private Long roleId;
 }

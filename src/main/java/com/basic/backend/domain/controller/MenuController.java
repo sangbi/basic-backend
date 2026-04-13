@@ -5,7 +5,7 @@ import com.basic.backend.core.response.ApiResponse;
 import com.basic.backend.core.util.RequestInfoUtil;
 import com.basic.backend.domain.dto.request.CreateMenuRequest;
 import com.basic.backend.domain.dto.request.UpdateMenuRequest;
-import com.basic.backend.domain.dto.response.AdminMenuResponse;
+import com.basic.backend.domain.dto.response.AdminMyMenuTreeResponse;
 import com.basic.backend.domain.dto.response.MenuResponse;
 import com.basic.backend.domain.service.ActivityLogService;
 import com.basic.backend.domain.service.MenuService;
@@ -88,9 +88,9 @@ public class MenuController {
     }
 
     @GetMapping("/me")
-    public ApiResponse<List<AdminMenuResponse>> findMyMenus() {
+    public ApiResponse<List<AdminMyMenuTreeResponse>> findMyMenus() {
         String roleCode = getCurrentRoleCode();
-        return ApiResponse.result(menuService.findMenusByRoleCode(roleCode));
+        return ApiResponse.result(menuService.findMenuTreeByRoleCode(roleCode));
     }
 
     private String getCurrentRoleCode() {

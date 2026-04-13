@@ -9,5 +9,4 @@ public class SearchUserRequest {
     private int offset;
     private int limit;
     private String userId;
-    private String role;
 }

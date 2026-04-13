@@ -53,6 +53,7 @@
     <update id="update">
         UPDATE basic_user
            SET role_id = #{roleId},
+               user_nm = #{userNm},
                updated_at = NOW(),
                updated_by = #{updatedBy}
          WHERE user_id = #{userId}

@@ -8,4 +8,5 @@ import lombok.Data;
 public class UserUpdateCondition {
     private Long roleId;
     private String userId;
+    private String userNm;
 }
