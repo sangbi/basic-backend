@@ -19,11 +19,10 @@ public class MenuAuthorizationService {
             return false;
         }
 
-        String normalizedApiPath = normalizeApiPath(requestUri);
-
-        String permissionYn = menuRoleMapper.findPermissionYn(
-                permissionType, roleCode,
-                normalizedApiPath
+        String permissionYn = menuRoleMapper.findPermissionYnByRequestUri(
+                roleCode,
+                requestUri,
+                permissionType
         );
 
         return "Y".equalsIgnoreCase(permissionYn);
@@ -43,28 +42,5 @@ public class MenuAuthorizationService {
             case "DELETE" -> "DELETE";
             default -> null;
         };
-    }
-
-    private String normalizeApiPath(String requestUri) {
-        if (requestUri == null || requestUri.isBlank()) {
-            return requestUri;
-        }
-
-        String normalized = requestUri;
-
-//        normalized = normalized.replaceAll("/summary$", "");
-        normalized = normalized.replaceAll("/\\d+/(download|view)$", "");
-        normalized = normalized.replaceAll("/me$", "");
-        normalized = normalized.replaceAll("/active$", "");
-        normalized = normalized.replaceAll("/search$", "");
-        normalized = normalized.replaceAll("/upload$", "");
-        normalized = normalized.replaceAll("/target$", "");
-        normalized = normalized.replaceAll("/link$", "");
-        normalized = normalized.replaceAll("/delete$", "");
-        normalized = normalized.replaceAll("/groups", "");
-        normalized = normalized.replaceAll("/codes", "");
-        normalized = normalized.replaceAll("/\\d+$", "");
-
-        return normalized;
     }
 }
