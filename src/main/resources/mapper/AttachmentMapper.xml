@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.basic.backend.domain.mapper.AttachmentMapper">
+
+    <insert id="insertAttachment" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO basic_attachment (
+            original_file_nm,
+            stored_file_nm,
+            file_path,
+            file_extension,
+            content_type,
+            file_size,
+            status,
+            created_at,
+            created_by
+        )
+        VALUES (
+            #{originalFileNm},
+            #{storedFileNm},
+            #{filePath},
+            #{fileExtension},
+            #{contentType},
+            #{fileSize},
+            #{status},
+            NOW(),
+            #{createdBy}
+        )
+    </insert>
+
+    <select id="findAttachmentById" resultType="com.basic.backend.domain.entity.AttachmentEntity">
+        SELECT *
+          FROM basic_attachment
+         WHERE id = #{id}
+    </select>
+
+    <insert id="insertAttachmentLink">
+        INSERT INTO basic_attachment_link (
+            attachment_id,
+            target_type,
+            target_id,
+            sort_order,
+            created_at,
+            created_by
+        )
+        VALUES (
+            #{attachmentId},
+            #{targetType},
+            #{targetId},
+            #{sortOrder},
+            NOW(),
+            #{createdBy}
+        )
+    </insert>
+
+    <select id="findAttachmentsByTarget" resultType="com.basic.backend.domain.entity.AttachmentEntity">
+        SELECT a.*
+          FROM basic_attachment_link al
+          JOIN basic_attachment a ON al.attachment_id = a.id
+         WHERE al.target_type = #{targetType}
+           AND al.target_id = #{targetId}
+           AND a.status = 'ACTIVE'
+         ORDER BY al.sort_order ASC, a.id ASC
+    </select>
+
+    <delete id="deleteAttachmentLink">
+        DELETE FROM basic_attachment_link
+         WHERE attachment_id = #{attachmentId}
+           AND target_type = #{targetType}
+           AND target_id = #{targetId}
+    </delete>
+
+    <select id="countLinksByAttachmentId" resultType="int">
+        SELECT COUNT(*)
+          FROM basic_attachment_link
+         WHERE attachment_id = #{attachmentId}
+    </select>
+
+    <delete id="deleteAttachmentLinkByAttachmentIdAndTarget">
+        DELETE FROM basic_attachment_link
+         WHERE attachment_id = #{attachmentId}
+           AND target_type = #{targetType}
+           AND target_id = #{targetId}
+    </delete>
+
+    <delete id="deleteAttachmentById">
+        DELETE FROM basic_attachment
+         WHERE id = #{attachmentId}
+    </delete>
+
+</mapper>

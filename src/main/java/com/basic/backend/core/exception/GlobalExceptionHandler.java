@@ -12,6 +12,7 @@ import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -91,6 +92,19 @@ public class GlobalExceptionHandler {
 
         log.error("Data integrity violation occurred", e);
 
+        return ResponseEntity
+                .status(errorCode.httpStatus())
+                .body(ApiResponse.err(
+                        errorCode.code(),
+                        errorCode.message()
+                ));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiResponse<?>> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException e) {
+        ErrorCode errorCode = ErrorCode.UPLOAD_FILE_SIZE_OVER;
+
+        log.error("file upload exception occurred", e);
         return ResponseEntity
                 .status(errorCode.httpStatus())
                 .body(ApiResponse.err(

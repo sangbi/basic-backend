@@ -1,20 +1,16 @@
 package com.basic.backend.domain.controller;
 
-import com.basic.backend.core.auth.dto.request.RegisterRequest;
 import com.basic.backend.core.auth.util.SecurityUtil;
 import com.basic.backend.core.paging.PageRequest;
 import com.basic.backend.core.paging.PageResponse;
 import com.basic.backend.core.response.ApiResponse;
 import com.basic.backend.core.util.RequestInfoUtil;
-import com.basic.backend.domain.dto.request.InfoUserCondition;
 import com.basic.backend.domain.dto.request.SearchUserCondition;
-import com.basic.backend.domain.dto.request.SearchUserPageRequest;
 import com.basic.backend.domain.dto.request.UserUpdateCondition;
 import com.basic.backend.domain.dto.response.UserListResponse;
 import com.basic.backend.domain.entity.UserEntity;
 import com.basic.backend.domain.service.ActivityLogService;
 import com.basic.backend.domain.service.UserService;
-import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;

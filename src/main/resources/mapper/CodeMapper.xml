@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.basic.backend.domain.mapper.CodeMapper">
+
+    <select id="findAllGroups" resultType="com.basic.backend.domain.entity.CodeGroupEntity">
+        SELECT *
+          FROM basic_code_group
+         ORDER BY id ASC
+    </select>
+
+    <select id="findGroupById" resultType="com.basic.backend.domain.entity.CodeGroupEntity">
+        SELECT *
+          FROM basic_code_group
+         WHERE id = #{id}
+    </select>
+
+    <insert id="insertGroup" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO basic_code_group (
+            group_code,
+            group_nm,
+            description,
+            status,
+            created_at,
+            created_by,
+            updated_at,
+            updated_by
+        )
+        VALUES (
+            #{groupCode},
+            #{groupNm},
+            #{description},
+            #{status},
+            NOW(),
+            #{createdBy},
+            NOW(),
+            #{updatedBy}
+        )
+    </insert>
+
+    <update id="updateGroup">
+        UPDATE basic_code_group
+           SET group_nm = #{groupNm},
+               description = #{description},
+               status = #{status},
+               updated_at = NOW(),
+               updated_by = #{updatedBy}
+         WHERE id = #{id}
+    </update>
+
+    <select id="findAllCodes" resultType="com.basic.backend.domain.entity.vo.CodeFlatRow">
+        SELECT c.id AS id,
+               c.group_id AS groupId,
+               g.group_code AS groupCode,
+               c.code AS code,
+               c.code_nm AS codeNm,
+               c.description AS description,
+               c.sort_order AS sortOrder,
+               c.status AS status,
+               c.extra_value AS extraValue
+          FROM basic_code c
+          JOIN basic_code_group g ON c.group_id = g.id
+         ORDER BY g.group_code ASC, c.sort_order ASC, c.id ASC
+    </select>
+
+    <select id="findCodesByGroupCode" resultType="com.basic.backend.domain.entity.vo.CodeFlatRow">
+        SELECT c.id AS id,
+               c.group_id AS groupId,
+               g.group_code AS groupCode,
+               c.code AS code,
+               c.code_nm AS codeNm,
+               c.description AS description,
+               c.sort_order AS sortOrder,
+               c.status AS status,
+               c.extra_value AS extraValue
+          FROM basic_code c
+          JOIN basic_code_group g ON c.group_id = g.id
+         WHERE g.group_code = #{groupCode}
+           AND c.status = 'ACTIVE'
+           AND g.status = 'ACTIVE'
+         ORDER BY c.sort_order ASC, c.id ASC
+    </select>
+
+    <select id="findCodeById" resultType="com.basic.backend.domain.entity.CodeEntity">
+        SELECT *
+          FROM basic_code
+         WHERE id = #{id}
+    </select>
+
+    <insert id="insertCode" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO basic_code (
+            group_id,
+            code,
+            code_nm,
+            description,
+            sort_order,
+            status,
+            extra_value,
+            created_at,
+            created_by,
+            updated_at,
+            updated_by
+        )
+        VALUES (
+            #{groupId},
+            #{code},
+            #{codeNm},
+            #{description},
+            #{sortOrder},
+            #{status},
+            #{extraValue},
+            NOW(),
+            #{createdBy},
+            NOW(),
+            #{updatedBy}
+        )
+    </insert>
+
+    <update id="updateCode">
+        UPDATE basic_code
+           SET code_nm = #{codeNm},
+               description = #{description},
+               sort_order = #{sortOrder},
+               status = #{status},
+               extra_value = #{extraValue},
+               updated_at = NOW(),
+               updated_by = #{updatedBy}
+         WHERE id = #{id}
+    </update>
+
+</mapper>

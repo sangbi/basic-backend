@@ -19,4 +19,10 @@ public interface MenuRoleMapper {
             @Param("apiPath") String apiPath
     );
     List<MyMenuPermissionFlatRow> findMyPermissionsByRoleCode(@Param("roleCode") String roleCode);
+
+    String findPermissionYnByRequestUri(
+            @Param("roleCode") String roleCode,
+            @Param("requestUri") String requestUri,
+            @Param("permissionType") String permissionType
+    );
 }
