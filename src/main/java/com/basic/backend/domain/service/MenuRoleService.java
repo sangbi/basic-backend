@@ -1,6 +1,7 @@
 package com.basic.backend.domain.service;
 
 import com.basic.backend.core.auth.util.SecurityUtil;
+import com.basic.backend.core.logging.ActivityLogAction;
 import com.basic.backend.domain.dto.request.UpdateMenuRoleRequest;
 import com.basic.backend.domain.dto.response.MenuRoleResponse;
 import com.basic.backend.domain.dto.response.MyMenuPermissionResponse;
@@ -10,6 +11,7 @@ import com.basic.backend.domain.mapper.MenuRoleMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,6 +30,8 @@ public class MenuRoleService {
                 .toList();
     }
 
+    @Transactional
+    @ActivityLogAction(actionType = "MENU_ROLE_UPDATE",message = "메뉴 권한 수정")
     public void updatePermissions(Long id, UpdateMenuRoleRequest request) {
         MenuRoleEntity entity = new MenuRoleEntity();
         entity.setId(id);

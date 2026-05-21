@@ -1,26 +1,22 @@
 package com.basic.backend.domain.controller;
 
-import com.basic.backend.core.logging.ActivityLogAction;
 import com.basic.backend.core.paging.PageRequest;
 import com.basic.backend.core.paging.PageResponse;
 import com.basic.backend.core.response.ApiResponse;
 import com.basic.backend.domain.dto.request.CreateResourceRequest;
-import com.basic.backend.domain.dto.request.SearchNoticeCondition;
 import com.basic.backend.domain.dto.request.SearchResourceCondition;
 import com.basic.backend.domain.dto.request.UpdateResourceRequest;
 import com.basic.backend.domain.dto.response.ResourceResponse;
 import com.basic.backend.domain.service.ResourceService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/admin/resources")
-public class ResourceController {
+@RequestMapping("/web/resources")
+public class WebResourceController {
 
     private final ResourceService resourceService;
 
-    public ResourceController(ResourceService resourceService) {
+    public WebResourceController(ResourceService resourceService) {
         this.resourceService = resourceService;
     }
 
@@ -33,6 +29,7 @@ public class ResourceController {
         PageRequest<SearchResourceCondition> request = new PageRequest<SearchResourceCondition>();
         SearchResourceCondition params = new SearchResourceCondition();
         params.setTitle(title);
+        params.setStatus("ACTIVE");
         request.setCondition(params);
         request.setPage(page);
         request.setSize(size);
@@ -41,23 +38,6 @@ public class ResourceController {
 
     @GetMapping("/{id}")
     public ApiResponse<ResourceResponse> findById(@PathVariable Long id) {
-        return ApiResponse.result(resourceService.findById(id));
-    }
-
-    @PostMapping
-    public ApiResponse<Long> create(@RequestBody CreateResourceRequest request) {
-        Long result = resourceService.create(request);
-
-        return ApiResponse.result(result);
-    }
-
-    @PutMapping("/{id}")
-    public ApiResponse<String> update(
-            @PathVariable Long id,
-            @RequestBody UpdateResourceRequest request
-    ) {
-        resourceService.update(id, request);
-
-        return ApiResponse.result("자료실 수정 성공");
+        return ApiResponse.result(resourceService.findActiveById(id));
     }
 }

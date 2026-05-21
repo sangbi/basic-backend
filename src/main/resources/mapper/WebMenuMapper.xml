@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.basic.backend.domain.mapper.WebMenuMapper">
+
+    <select id="findMenus" resultType="com.basic.backend.domain.entity.vo.WebMenuFlatRow">
+        SELECT m.id,
+               m.menu_nm,
+               m.menu_path,
+               m.parent_id,
+               m.sort_order
+          FROM basic_menu m
+         WHERE m.menu_type = 'WEB'
+           AND m.status = 'ACTIVE'
+           AND m.visible_yn = 'Y'
+           AND m.menu_type = 'WEB'
+         ORDER BY m.sort_order ASC, m.id ASC
+    </select>
+</mapper>

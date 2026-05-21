@@ -5,10 +5,29 @@
 
 <mapper namespace="com.basic.backend.domain.mapper.NoticeMapper">
 
-    <select id="findAll" resultType="com.basic.backend.domain.entity.NoticeEntity">
+    <select id="findAllPaged" resultType="com.basic.backend.domain.entity.NoticeEntity">
         SELECT *
           FROM basic_notice
+        <where>
+            <if test="title != null and title !=''">
+                AND title ILIKE CONCAT('%' ,#{title}, '%')
+            </if>
+            AND status != 'DELETED'
+        </where>
          ORDER BY pinned_yn DESC, id DESC
+         LIMIT #{limit}
+        OFFSET #{offset}
+    </select>
+
+    <select id="countAll" resultType="long">
+        SELECT COUNT(*)
+          FROM basic_notice
+        <where>
+            <if test="title != null and title !=''">
+                AND title ILIKE CONCAT('%' ,#{title}, '%')
+            </if>
+            AND status != 'DELETED'
+        </where>
     </select>
 
     <select id="findById" resultType="com.basic.backend.domain.entity.NoticeEntity">
@@ -56,4 +75,25 @@
          WHERE id = #{id}
     </update>
 
+    <delete id="deleteById">
+        UPDATE basic_notice
+           SET status = 'DELETED',
+               deleted_at = NOW(),
+               updated_at = NOW(),
+               updated_by = #{updatedBy}
+         WHERE id = #{id}
+    </delete>
+
+    <select id="findActiveById" resultType="com.basic.backend.domain.entity.NoticeEntity">
+        SELECT *
+          FROM basic_notice
+         WHERE id = #{id}
+           AND status = 'ACTIVE'
+    </select>
+
+    <update id="increaseViewCount">
+        UPDATE basic_notice
+           SET view_cnt = view_cnt + 1
+         WHERE id = #{id}
+    </update>
 </mapper>

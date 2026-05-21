@@ -1,6 +1,7 @@
 package com.basic.backend.domain.service;
 
 import com.basic.backend.core.auth.util.SecurityUtil;
+import com.basic.backend.core.logging.ActivityLogAction;
 import com.basic.backend.domain.dto.request.CreateRoleRequest;
 import com.basic.backend.domain.dto.request.UpdateRoleRequest;
 import com.basic.backend.domain.dto.response.RoleResponse;
@@ -37,6 +38,7 @@ public class RoleService {
     }
 
     @Transactional
+    @ActivityLogAction(actionType = "ROLE_CREATE",message = "권한 등록")
     public void create(CreateRoleRequest request) {
         RoleEntity entity = RoleEntity.builder()
                 .roleCode(request.getRoleCode())
@@ -51,6 +53,7 @@ public class RoleService {
     }
 
     @Transactional
+    @ActivityLogAction(actionType = "ROLE_UPDATE",message = "권한 수정")
     public void update(Long id, UpdateRoleRequest request) {
         RoleEntity entity = RoleEntity.builder()
                 .id(id)

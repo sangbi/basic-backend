@@ -9,7 +9,7 @@ import java.util.List;
 
 @Mapper
 public interface MenuMapper {
-    List<MenuEntity> findAll();
+    List<MenuEntity> findAll(@Param("menuSetCd") String menuSetCd);
     List<AdminMenuFlatRow> findMenusByRoleCode(@Param("roleCode") String roleCode);
     MenuEntity findById(Long Id);
     void insert(MenuEntity entity);

@@ -1,6 +1,9 @@
 package com.basic.backend.domain.service;
 
 import com.basic.backend.core.auth.util.SecurityUtil;
+import com.basic.backend.core.exception.BasicException;
+import com.basic.backend.core.logging.ActivityLogAction;
+import com.basic.backend.core.response.ErrorCode;
 import com.basic.backend.domain.dto.request.CreateMenuRequest;
 import com.basic.backend.domain.dto.request.UpdateMenuRequest;
 import com.basic.backend.domain.dto.response.AdminMyMenuTreeResponse;
@@ -22,8 +25,8 @@ public class MenuService {
         this.menuMapper = menuMapper;
     }
 
-    public List<MenuResponse> findAll() {
-        return menuMapper.findAll().stream()
+    public List<MenuResponse> findAll(String menuSetCd) {
+        return menuMapper.findAll(menuSetCd).stream()
                 .map(menu -> MenuResponse.builder()
                         .id(menu.getId())
                         .menuNm(menu.getMenuNm())
@@ -43,6 +46,7 @@ public class MenuService {
     }
 
     @Transactional
+    @ActivityLogAction(actionType = "MENU_CREATE",message = "메뉴 등록")
     public void create(CreateMenuRequest request) {
         MenuEntity entity = MenuEntity.builder()
                 .menuNm(request.getMenuNm())
@@ -55,12 +59,14 @@ public class MenuService {
                 .status(request.getStatus())
                 .createdBy(SecurityUtil.getCurrentUserId())
                 .updatedBy(SecurityUtil.getCurrentUserId())
+                .menuSetId(request.getMenuSetId())
                 .build();
 
         menuMapper.insert(entity);
     }
 
     @Transactional
+    @ActivityLogAction(actionType = "MENU_UPDATE",message = "메뉴 수정")
     public void update(Long id, UpdateMenuRequest request) {
         MenuEntity entity = MenuEntity.builder()
                 .id(id)
@@ -73,6 +79,7 @@ public class MenuService {
                 .visibleYn(request.getVisibleYn())
                 .status(request.getStatus())
                 .updatedBy(SecurityUtil.getCurrentUserId())
+                .menuSetId(request.getMenuSetId())
                 .build();
 
         menuMapper.update(entity);
@@ -141,6 +148,9 @@ public class MenuService {
                 .icon(menu.getIcon())
                 .visibleYn(menu.getVisibleYn())
                 .status(menu.getStatus())
+                .menuSetId(menu.getMenuSetId())
+                .menuSetCd(menu.getMenuSetCd())
+                .menuSetNm(menu.getMenuSetNm())
                 .build();
     }
 }

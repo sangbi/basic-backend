@@ -25,4 +25,7 @@ public class MenuEntity {
     private String createdBy;
     private LocalDateTime updatedAt;
     private String updatedBy;
+    private Long menuSetId;
+    private String menuSetCd;
+    private String menuSetNm;
 }

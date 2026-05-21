@@ -10,6 +10,7 @@ import com.basic.backend.core.auth.model.AuthUser;
 import com.basic.backend.core.auth.model.RefreshToken;
 import com.basic.backend.core.auth.util.SecurityUtil;
 import com.basic.backend.core.exception.BasicException;
+import com.basic.backend.core.logging.ActivityLogAction;
 import com.basic.backend.core.response.ErrorCode;
 import com.basic.backend.core.security.jwt.JwtTokenProvider;
 import com.basic.backend.domain.dto.request.AuthTokenResult;
@@ -50,6 +51,7 @@ public class AuthService {
         this.userSessionService = userSessionService;
     }
 
+    @ActivityLogAction(actionType = "USER_CREATE",message = "사용자 등록")
     public void register(RegisterRequest request) {
         AuthUser existingUser = authUserReader.findByUserId(request.getUserId());
         if (existingUser != null) {

@@ -3,19 +3,15 @@ package com.basic.backend.domain.dto.response;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @Builder
-public class MenuResponse {
+public class WebMenuTreeResponse {
     private Long id;
     private String menuNm;
     private String menuPath;
-    private String apiPath;
     private Long parentId;
     private Integer sortOrder;
-    private String icon;
-    private String visibleYn;
-    private String status;
-    private Long menuSetId;
-    private String menuSetCd;
-    private String menuSetNm;
+    private List<WebMenuTreeResponse> children;
 }

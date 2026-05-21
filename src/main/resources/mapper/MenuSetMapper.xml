@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.basic.backend.domain.mapper.MenuSetMapper">
+    <select id="findAll" resultType="com.basic.backend.domain.entity.MenuSetEntity">
+        SELECT *
+        FROM basic_menu_set
+        WHERE status = 'ACTIVE'
+        ORDER BY id ASC
+    </select>
+</mapper>

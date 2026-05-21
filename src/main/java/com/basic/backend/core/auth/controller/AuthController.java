@@ -1,7 +1,6 @@
 package com.basic.backend.core.auth.controller;
 
 import com.basic.backend.core.auth.dto.request.LoginRequest;
-import com.basic.backend.core.auth.dto.request.RefreshTokenRequest;
 import com.basic.backend.core.auth.dto.request.RegisterRequest;
 import com.basic.backend.core.auth.dto.response.LoginResponse;
 import com.basic.backend.core.auth.dto.response.MeResponse;
@@ -9,14 +8,13 @@ import com.basic.backend.core.auth.dto.response.TokenRefreshResponse;
 import com.basic.backend.core.auth.service.AuthService;
 import com.basic.backend.core.auth.util.SecurityUtil;
 import com.basic.backend.core.exception.BasicException;
+import com.basic.backend.core.logging.ActivityLogAction;
 import com.basic.backend.core.response.ApiResponse;
 import com.basic.backend.core.response.ErrorCode;
 import com.basic.backend.core.util.RequestInfoUtil;
 import com.basic.backend.domain.dto.request.AuthTokenResult;
-import com.basic.backend.domain.service.ActivityLogService;
 import com.basic.backend.domain.service.LoginHistoryService;
 import com.basic.backend.domain.service.UserSessionService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -32,32 +30,20 @@ public class AuthController {
     private final AuthService authService;
     private final LoginHistoryService loginHistoryService;
     private final UserSessionService userSessionService;
-    private final ActivityLogService activityLogService;
 
     public AuthController(AuthService authService,
                           LoginHistoryService loginHistoryService,
-                          UserSessionService userSessionService,
-                          ActivityLogService activityLogService) {
+                          UserSessionService userSessionService
+                          ) {
         this.authService = authService;
         this.loginHistoryService = loginHistoryService;
         this.userSessionService = userSessionService;
-        this.activityLogService = activityLogService;
     }
 
     @PostMapping("/register")
-    public ApiResponse<String> register(@RequestBody @Valid RegisterRequest request, HttpServletRequest httpRequest) {
+    public ApiResponse<String> register(@RequestBody @Valid RegisterRequest request) {
         authService.register(request);
 
-        activityLogService.save(
-                SecurityUtil.getCurrentUserId(),
-                "USER_CREATE",
-                httpRequest.getMethod(),
-                httpRequest.getRequestURI(),
-                RequestInfoUtil.getClientIp(httpRequest),
-                RequestInfoUtil.getUserAgent(httpRequest),
-                "200",
-                "userId=" + request.getUserId()
-        );
         return ApiResponse.result("회원가입 성공");
     }
 

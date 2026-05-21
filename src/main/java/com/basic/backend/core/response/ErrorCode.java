@@ -30,6 +30,7 @@ public enum ErrorCode {
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DB_500", "데이터베이스 처리 중 오류가 발생했습니다."),
     DUPLICATE_KEY(HttpStatus.BAD_REQUEST, "DB_400_DUPLICATE", "중복 데이터가 존재합니다."),
     DATA_INTEGRITY_ERROR(HttpStatus.BAD_REQUEST, "DB_400_INTEGRITY", "데이터 무결성 오류가 발생했습니다."),
+    DATA_NOT_FOUND(HttpStatus.BAD_REQUEST, "DB_100", "해당 데이터가 존재하지않습니다."),
 
     UPLOAD_FILE_SIZE_OVER(HttpStatus.BAD_REQUEST,"FILE_400", "업로드 가능한 파일 크기를 초과했습니다.");
 

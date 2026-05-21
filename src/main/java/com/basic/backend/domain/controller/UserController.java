@@ -1,17 +1,14 @@
 package com.basic.backend.domain.controller;
 
-import com.basic.backend.core.auth.util.SecurityUtil;
+import com.basic.backend.core.logging.ActivityLogAction;
 import com.basic.backend.core.paging.PageRequest;
 import com.basic.backend.core.paging.PageResponse;
 import com.basic.backend.core.response.ApiResponse;
-import com.basic.backend.core.util.RequestInfoUtil;
 import com.basic.backend.domain.dto.request.SearchUserCondition;
 import com.basic.backend.domain.dto.request.UserUpdateCondition;
 import com.basic.backend.domain.dto.response.UserListResponse;
 import com.basic.backend.domain.entity.UserEntity;
-import com.basic.backend.domain.service.ActivityLogService;
 import com.basic.backend.domain.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,12 +17,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final ActivityLogService activityLogService;
 
-    public UserController(UserService userService,
-                          ActivityLogService activityLogService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.activityLogService = activityLogService;
     }
 
     @GetMapping("/search")
@@ -49,36 +43,16 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public ApiResponse<String> update(@RequestBody @Valid UserUpdateCondition request, HttpServletRequest httpRequest) {
+    public ApiResponse<String> update(@RequestBody @Valid UserUpdateCondition request) {
         userService.update(request);
 
-        activityLogService.save(
-                SecurityUtil.getCurrentUserId(),
-                "USER_UPDATE",
-                httpRequest.getMethod(),
-                httpRequest.getRequestURI(),
-                RequestInfoUtil.getClientIp(httpRequest),
-                RequestInfoUtil.getUserAgent(httpRequest),
-                "200",
-                "userId=" + request.getUserId()+",roleId="+request.getRoleId()
-        );
         return ApiResponse.result("회원수정 성공");
     }
 
     @DeleteMapping("/delete/{userId}")
-    public ApiResponse<String> delete(@PathVariable String userId,HttpServletRequest httpRequest) {
+    public ApiResponse<String> delete(@PathVariable String userId) {
         userService.delete(userId);
 
-        activityLogService.save(
-                SecurityUtil.getCurrentUserId(),
-                "USER_DELETE",
-                httpRequest.getMethod(),
-                httpRequest.getRequestURI(),
-                RequestInfoUtil.getClientIp(httpRequest),
-                RequestInfoUtil.getUserAgent(httpRequest),
-                "200",
-                "userId=" + userId
-        );
         return ApiResponse.result("회원삭제 성공");
     }
 }

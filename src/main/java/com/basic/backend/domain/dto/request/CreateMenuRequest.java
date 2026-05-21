@@ -14,4 +14,5 @@ public class CreateMenuRequest {
     private String icon;
     private String visibleYn;
     private String status;
+    private Long menuSetId;
 }

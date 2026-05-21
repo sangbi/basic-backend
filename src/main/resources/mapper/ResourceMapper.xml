@@ -5,10 +5,29 @@
 
 <mapper namespace="com.basic.backend.domain.mapper.ResourceMapper">
 
-    <select id="findAll" resultType="com.basic.backend.domain.entity.ResourceEntity">
+    <select id="findAllPaged" resultType="com.basic.backend.domain.entity.ResourceEntity">
         SELECT *
           FROM basic_resource
+        <where>
+            <if test="title != null and title !=''">
+                AND title ILIKE CONCAT('%' ,#{title}, '%')
+            </if>
+            AND status != 'DELETED'
+        </where>
          ORDER BY pinned_yn DESC, id DESC
+         LIMIT #{limit}
+        OFFSET #{offset}
+    </select>
+
+    <select id="countAll" resultType="long">
+        SELECT COUNT(*)
+        FROM basic_resource
+        <where>
+            <if test="title != null and title !=''">
+                AND title ILIKE CONCAT('%' ,#{title}, '%')
+            </if>
+            AND status != 'DELETED'
+        </where>
     </select>
 
     <select id="findById" resultType="com.basic.backend.domain.entity.ResourceEntity">
@@ -50,6 +69,19 @@
                pinned_yn = #{pinnedYn},
                updated_at = NOW(),
                updated_by = #{updatedBy}
+         WHERE id = #{id}
+    </update>
+
+    <select id="findActiveById" resultType="com.basic.backend.domain.entity.ResourceEntity">
+        SELECT *
+          FROM basic_resource
+         WHERE id = #{id}
+           AND status = 'ACTIVE'
+    </select>
+
+    <update id="increaseViewCount">
+        UPDATE basic_resource
+           SET view_cnt = view_cnt + 1
          WHERE id = #{id}
     </update>
 

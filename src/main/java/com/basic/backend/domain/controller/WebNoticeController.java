@@ -1,6 +1,5 @@
 package com.basic.backend.domain.controller;
 
-import com.basic.backend.core.logging.ActivityLogAction;
 import com.basic.backend.core.paging.PageRequest;
 import com.basic.backend.core.paging.PageResponse;
 import com.basic.backend.core.response.ApiResponse;
@@ -13,12 +12,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/admin/notices")
-public class NoticeController {
-    
+@RequestMapping("/web/notices")
+public class WebNoticeController {
+
     private final NoticeService noticeService;
-    
-    public NoticeController(NoticeService noticeService) {
+
+    public WebNoticeController(NoticeService noticeService) {
         this.noticeService = noticeService;
     }
     
@@ -31,6 +30,7 @@ public class NoticeController {
         PageRequest<SearchNoticeCondition> request = new PageRequest<SearchNoticeCondition>();
         SearchNoticeCondition params = new SearchNoticeCondition();
         params.setTitle(title);
+        params.setStatus("ACTIVE");
         request.setCondition(params);
         request.setPage(page);
         request.setSize(size);
@@ -39,32 +39,6 @@ public class NoticeController {
     
     @GetMapping("{id}")
     public ApiResponse<NoticeResponse> findById(@PathVariable Long id) {
-        return ApiResponse.result(noticeService.findById(id));
-    }
-    
-    @PostMapping
-    public ApiResponse<Long> create(@RequestBody CreateNoticeRequest request,
-                                      HttpServletRequest httpRequest) {
-        Long result = noticeService.create(request);
-        
-        return ApiResponse.result(result);
-    }
-    
-    @PutMapping("/{id}")
-    public ApiResponse<String> update(@PathVariable Long id,
-                                      @RequestBody UpdateNoticeRequest request,
-                                      HttpServletRequest httpRequest) {
-        noticeService.update(id,request);
-        
-        return ApiResponse.result("공지사항 수정 성공");
-    }
-
-    @DeleteMapping("/{id}")
-    public ApiResponse<String> delete(
-            @PathVariable Long id,
-            HttpServletRequest httpRequest) {
-        noticeService.delete(id);
-
-        return ApiResponse.result("공지사항 삭제 성공");
+        return ApiResponse.result(noticeService.findActiveById(id));
     }
 }

@@ -11,17 +11,14 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class NoticeEntity {
+public class MenuSetEntity {
     private Long id;
-    private String title;
-    private String content;
-    private String noticeType;
+    private String menuSetCd;
+    private String menuSetNm;
+    private String description;
     private String status;
-    private String pinnedYn;
-    private Integer viewCnt;
     private LocalDateTime createdAt;
     private String createdBy;
     private LocalDateTime updatedAt;
     private String updatedBy;
-    private LocalDateTime deletedAt;
 }

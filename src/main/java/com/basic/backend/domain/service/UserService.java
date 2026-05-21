@@ -2,6 +2,7 @@ package com.basic.backend.domain.service;
 
 import com.basic.backend.core.audit.AuditUtil;
 import com.basic.backend.core.auth.model.AuthUser;
+import com.basic.backend.core.logging.ActivityLogAction;
 import com.basic.backend.core.paging.PageRequest;
 import com.basic.backend.core.paging.PageResponse;
 import com.basic.backend.core.paging.PageResult;
@@ -27,7 +28,6 @@ public class UserService {
     }
 
     public PageResponse<UserListResponse> search(PageRequest<SearchUserCondition> request){
-        System.out.printf("아이디>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+request.getCondition().getUserId());
         SearchUserRequest mapperRequest = SearchUserRequest.builder()
                 .offset(request.getOffset())
                 .limit(request.getLimit())
@@ -58,6 +58,7 @@ public class UserService {
     }
 
     @Transactional
+    @ActivityLogAction(actionType = "USER_UPDATE",message = "사용자 수정")
     public void update(UserUpdateCondition condition) {
         String currentUser = AuditUtil.getCurrentUser();
         UserUpdateRequest userUpdateRequest = UserUpdateRequest.builder()
@@ -71,6 +72,7 @@ public class UserService {
     }
 
     @Transactional
+    @ActivityLogAction(actionType = "USER_DELETE",message = "사용자 삭제")
     public void delete(String userId) {
         userMapper.delete(userId);
     }

@@ -39,7 +39,7 @@
     </select>
 
     <update id="updateLatestLogoutByUserId">
-        SELECT basic_login_histories
+        UPDATE basic_login_histories
            SET logout_at = NOW()
          WHERE id = (
             SELECT id
